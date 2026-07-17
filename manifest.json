@@ -1,80 +1,18 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no" />
-<title>Auditor Pro IBAM — Preparação para Auditor Fiscal</title>
-<meta name="description" content="Aplicativo completo de gerenciamento de estudos para preparação de Auditor Fiscal — banca IBAM. 100% offline." />
-
-<!-- PWA / iOS Add to Home Screen -->
-<link rel="manifest" href="./manifest.json" />
-<meta name="theme-color" content="#14181F" />
-<meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-<meta name="apple-mobile-web-app-title" content="Auditor Pro" />
-<link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon.png" />
-<link rel="icon" href="./assets/icons/icon-192.png" />
-
-<!-- Estilos (ordem importa: tokens -> base -> componentes -> páginas) -->
-<link rel="stylesheet" href="./styles/tokens.css" />
-<link rel="stylesheet" href="./styles/base.css" />
-<link rel="stylesheet" href="./styles/components.css" />
-<link rel="stylesheet" href="./styles/pages.css" />
-</head>
-<body>
-
-  <!-- Splash inicial exibida enquanto o app inicializa -->
-  <div class="splash" id="splash">
-    <div class="splash__seal"></div>
-    <div class="type-title-2" style="letter-spacing:.02em">AUDITOR PRO IBAM</div>
-    <div class="type-footnote" style="color:rgba(255,255,255,.5)">Preparando seu plano de estudos…</div>
-  </div>
-
-  <!-- Shell da aplicação (preenchido dinamicamente pelo router) -->
-  <div id="app-shell"></div>
-
-  <!--
-    Carregamento em <script> simples (sem bundler, sem type="module")
-    para máxima compatibilidade com Safari iOS via file://, Atalhos e
-    Scriptable, evitando restrições de CORS de ES Modules locais.
-    Cada arquivo se registra em um namespace global (window.X).
-  -->
-
-  <!-- Dados e ícones -->
-  <script src="./assets/icons.js"></script>
-  <script src="./data/disciplines.js"></script>
-
-  <!-- Núcleo: persistência, utilitários e estado -->
-  <script src="./scripts/storage.js"></script>
-  <script src="./scripts/utils.js"></script>
-  <script src="./scripts/state.js"></script>
-
-  <!-- Motores de domínio -->
-  <script src="./scripts/scheduler.js"></script>
-  <script src="./scripts/timer.js"></script>
-  <script src="./scripts/gamification.js"></script>
-  <script src="./scripts/charts.js"></script>
-
-  <!-- Interface e navegação -->
-  <script src="./scripts/ui.js"></script>
-  <script src="./scripts/router.js"></script>
-
-  <!-- Páginas -->
-  <script src="./scripts/pages/dashboard.js"></script>
-  <script src="./scripts/pages/schedule.js"></script>
-  <script src="./scripts/pages/disciplines.js"></script>
-  <script src="./scripts/pages/discipline-detail.js"></script>
-  <script src="./scripts/pages/focus.js"></script>
-  <script src="./scripts/pages/questions.js"></script>
-  <script src="./scripts/pages/simulados.js"></script>
-  <script src="./scripts/pages/stats.js"></script>
-  <script src="./scripts/pages/checklist.js"></script>
-  <script src="./scripts/pages/search.js"></script>
-  <script src="./scripts/pages/settings.js"></script>
-  <script src="./scripts/pages/achievements.js"></script>
-  <script src="./scripts/pages/more.js"></script>
-
-  <!-- Bootstrap (sempre por último) -->
-  <script src="./scripts/app.js"></script>
-</body>
-</html>
+{
+  "name": "Auditor Pro IBAM",
+  "short_name": "Auditor Pro",
+  "description": "Aplicativo completo de gerenciamento de estudos para preparação de Auditor Fiscal — banca IBAM.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0B0E14",
+  "theme_color": "#14181F",
+  "lang": "pt-BR",
+  "icons": [
+    { "src": "./assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "./assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "./assets/icons/icon-192-maskable.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "./assets/icons/icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
