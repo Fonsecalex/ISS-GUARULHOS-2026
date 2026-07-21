@@ -19,6 +19,18 @@
     R.registerRoute('checklist', P.checklist.render);
     R.registerRoute('achievements', P.achievements.render);
     R.registerRoute('settings', P.settings.render);
+    R.registerRoute('history', P.history.render);
+    R.registerRoute('notebook', P.notebook.render);
+  }
+
+  function restoreTimerIfNeeded() {
+    if (!global.Timer || !global.Timer.restore) return;
+    const restored = global.Timer.restore();
+    if (!restored) return;
+    const st = global.Timer.getState();
+    if (st.studySecondsAccumulated >= 5) {
+      global.UI.toast(`Cronômetro retomado: ${global.Utils.fmtClock(st.studySecondsAccumulated)} já estudados`, 'success');
+    }
   }
 
   function registerServiceWorker() {
@@ -46,9 +58,13 @@
     global.State.loadAll();
     registerRoutes();
     global.Router.init();
+    restoreTimerIfNeeded();
     registerServiceWorker();
     hideSplash();
   }
 
-  document.addEventListener('DOMContentLoaded', boot);
+  document.addEventListener('DOMContentLoaded', () => {
+    if (global.AccessGate) global.AccessGate.init(boot);
+    else boot(); // fallback caso o portão de acesso não esteja presente
+  });
 })(window);

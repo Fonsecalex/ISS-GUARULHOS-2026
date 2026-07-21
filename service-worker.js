@@ -4,7 +4,7 @@
  * garantindo funcionamento 100% offline após o primeiro carregamento.
  * Nenhuma chamada de rede é feita a servidores próprios — tudo estático.
  */
-const CACHE_NAME = 'auditor-pro-ibam-v1';
+const CACHE_NAME = 'auditor-pro-ibam-v3';
 const APP_SHELL = [
   './',
   './index.html',
@@ -15,6 +15,8 @@ const APP_SHELL = [
   './styles/pages.css',
   './assets/icons.js',
   './data/disciplines.js',
+  './data/access-codes.js',
+  './scripts/access-gate.js',
   './scripts/storage.js',
   './scripts/utils.js',
   './scripts/state.js',
@@ -22,6 +24,7 @@ const APP_SHELL = [
   './scripts/timer.js',
   './scripts/gamification.js',
   './scripts/charts.js',
+  './scripts/notebook-db.js',
   './scripts/ui.js',
   './scripts/router.js',
   './scripts/app.js',
@@ -37,7 +40,9 @@ const APP_SHELL = [
   './scripts/pages/search.js',
   './scripts/pages/settings.js',
   './scripts/pages/achievements.js',
-  './scripts/pages/more.js'
+  './scripts/pages/more.js',
+  './scripts/pages/history.js',
+  './scripts/pages/notebook.js'
 ];
 
 self.addEventListener('install', event => {

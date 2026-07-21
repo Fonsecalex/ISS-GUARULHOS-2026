@@ -88,6 +88,10 @@
             <div class="settings-row__label" style="color:var(--stamp-red)">${Icon('trash')}<span class="type-callout">Resetar aplicativo</span></div>
             <button class="icon-btn" id="btn-reset">${Icon('chevron-right')}</button>
           </div>
+          <div class="settings-row">
+            <div class="settings-row__label">${Icon('shield')}<span class="type-callout">Bloquear acesso neste aparelho</span></div>
+            <button class="icon-btn" id="btn-lock-access">${Icon('chevron-right')}</button>
+          </div>
         </div>
       </div>
 
@@ -138,6 +142,15 @@
           global.Router.navigate('dashboard');
           global.Router.render();
         }
+      });
+    };
+
+    document.getElementById('btn-lock-access').onclick = () => {
+      global.UI.confirmDialog({
+        title: 'Bloquear acesso?',
+        message: 'Você precisará digitar o código de acesso novamente para entrar neste aparelho. Seus dados de estudo não serão apagados.',
+        confirmLabel: 'Bloquear', danger: false,
+        onConfirm: () => { global.AccessGate && global.AccessGate.revokeAccess(); }
       });
     };
   }

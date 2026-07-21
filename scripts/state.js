@@ -51,6 +51,37 @@
     global.Gamification && global.Gamification.registerStudy(session.seconds);
   }
 
+  /** Corrige uma sessão registrada por engano (ex: minutos errados). Ajusta o tempo agregado do tema. */
+  function updateSession(id, patch) {
+    const s = data.sessions.find(x => x.id === id);
+    if (!s) return;
+    const oldSeconds = s.seconds;
+    Object.assign(s, patch);
+    persist('sessions');
+    if (s.disciplineId && s.temaId && patch.seconds !== undefined && patch.seconds !== oldSeconds) {
+      const tema = getTema(s.disciplineId, s.temaId);
+      if (tema) {
+        tema.tempoEstudadoSeg = Math.max(0, tema.tempoEstudadoSeg - oldSeconds + s.seconds);
+        persist('disciplines');
+      }
+    }
+  }
+
+  /** Remove uma sessão registrada por engano. Ajusta o tempo agregado do tema. */
+  function deleteSession(id) {
+    const s = data.sessions.find(x => x.id === id);
+    if (!s) return;
+    data.sessions = data.sessions.filter(x => x.id !== id);
+    persist('sessions');
+    if (s.disciplineId && s.temaId) {
+      const tema = getTema(s.disciplineId, s.temaId);
+      if (tema) {
+        tema.tempoEstudadoSeg = Math.max(0, tema.tempoEstudadoSeg - s.seconds);
+        persist('disciplines');
+      }
+    }
+  }
+
   function totalSecondsToday() {
     const today = U.todayISO();
     return data.sessions.filter(s => (s.endedAt || s.startedAt || '').slice(0, 10) === today).reduce((sum, s) => sum + s.seconds, 0);
@@ -116,6 +147,8 @@
   function updateNote(id, patch) { const n = data.notes.find(n => n.id === id); if (n) { Object.assign(n, patch); persist('notes'); } }
   function deleteNote(id) { data.notes = data.notes.filter(n => n.id !== id); persist('notes'); }
   function notesFor(temaId) { return data.notes.filter(n => n.temaId === temaId); }
+  /** Todas as notas (Caderno geral), mais recentes primeiro. Inclui notas gerais (temaId nulo) e vinculadas a temas. */
+  function allNotes() { return [...data.notes].sort((a, b) => (b.criadoEm || '').localeCompare(a.criadoEm || '')); }
 
   function addFlashcard(fc) {
     data.flashcards.push(fc); persist('flashcards');
@@ -157,11 +190,11 @@
   global.State = {
     loadAll, persist, subscribe, raw: () => data,
     getDisciplines, getDiscipline, getTema, findTemaGlobal, setTemaStatus, updateTema,
-    addSession, totalSecondsToday, totalSecondsInRange, totalSecondsAll,
+    addSession, updateSession, deleteSession, totalSecondsToday, totalSecondsInRange, totalSecondsAll,
     addQuestionRecord, allQuestionStats, addSimulado,
     REVIEW_INTERVALS, scheduleNextReview, dueReviews, nextReview,
     toggleChecklistItem, checklistProgress,
-    addNote, updateNote, deleteNote, notesFor,
+    addNote, updateNote, deleteNote, notesFor, allNotes,
     addFlashcard, flashcardsFor, deleteFlashcard,
     editalProgress, disciplineProgress, currentStreak,
     getSettings, updateSettings, daysUntilExam

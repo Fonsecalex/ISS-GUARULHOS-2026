@@ -4,6 +4,8 @@
 (function (global) {
   'use strict';
   const PATHS = {
+    mic: 'M9 2h6a3 3 0 0 1 3 3v6a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3V5a3 3 0 0 1 3-3Z M5 11a7 7 0 0 0 14 0 M12 18v4 M8 22h8',
+    notebook: 'M6 3h12a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z M9 3v18 M4 7h1 M4 12h1 M4 17h1',
     home: 'M3 11.5 12 4l9 7.5 M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9',
     calendar: 'M4 5h16a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z M16 3v4 M8 3v4 M3 10h18',
     book: 'M5 4h9a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3V4Z M17 7h2a1 1 0 0 1 1 1v12',

@@ -67,10 +67,14 @@
           <span id="focus-status-label">Pronto</span>
           <span id="focus-count-label"></span>
         </div>
+        <button class="chip chip--blue" id="focus-note-btn" style="margin:14px auto 0;display:flex">${Icon('notebook')} Nota rápida</button>
       </div>
     `;
 
     document.getElementById('focus-close').onclick = close;
+    document.getElementById('focus-note-btn').onclick = () => {
+      if (global.Pages.notebook) global.Pages.notebook.openQuickNoteSheet(disc ? disc.id : null, tema ? tema.id : null);
+    };
     document.getElementById('focus-toggle').onclick = () => {
       const s = global.Timer.getState();
       s.running ? global.Timer.pause() : global.Timer.start();

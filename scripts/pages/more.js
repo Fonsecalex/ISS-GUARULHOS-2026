@@ -7,6 +7,8 @@
   const Icon = global.Icon;
 
   const ITEMS = [
+    { route: 'notebook', label: 'Caderno', desc: 'Anotações e áudios em tempo real', icon: 'notebook', color: 'var(--teal)' },
+    { route: 'history', label: 'Histórico de Estudos', desc: 'Veja e corrija sessões registradas', icon: 'clock', color: 'var(--ledger-blue)' },
     { route: 'questions', label: 'Questões', desc: 'Registrar e revisar seu desempenho', icon: 'target', color: 'var(--ledger-blue)' },
     { route: 'simulados', label: 'Simulados', desc: 'Cadastre notas e acompanhe a evolução', icon: 'checklist', color: 'var(--seal-green)' },
     { route: 'checklist', label: 'Checklist do Edital', desc: 'Todo o edital em formato de lista', icon: 'checklist', color: 'var(--gold)' },

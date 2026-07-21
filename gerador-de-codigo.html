@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Gerador de Código de Acesso — Auditor Pro IBAM</title>
+<style>
+  :root { color-scheme: light dark; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    font-family: -apple-system, "SF Pro Text", system-ui, sans-serif;
+    background: #0B0E14; color: #F2F0EA; padding: 24px;
+  }
+  .card {
+    width: 100%; max-width: 420px; background: #12161F; border: 1px solid rgba(255,255,255,.08);
+    border-radius: 22px; padding: 28px 24px; box-shadow: 0 16px 40px rgba(0,0,0,.5);
+  }
+  h1 { font-size: 19px; margin: 0 0 6px; }
+  p.sub { font-size: 13px; color: #A9AFBC; margin: 0 0 24px; line-height: 1.5; }
+  label { font-size: 12.5px; font-weight: 650; color: #A9AFBC; display: block; margin-bottom: 6px; }
+  input {
+    width: 100%; padding: 13px 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,.1);
+    background: #1C222E; color: #F2F0EA; font-size: 15px; margin-bottom: 16px;
+  }
+  button {
+    width: 100%; padding: 14px; border-radius: 12px; border: none; background: #C9A227;
+    color: #1B1503; font-weight: 700; font-size: 15px; cursor: pointer;
+  }
+  .result { margin-top: 20px; display: none; }
+  .result.show { display: block; }
+  .result label { margin-top: 12px; }
+  .result textarea {
+    width: 100%; padding: 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,.1);
+    background: #1C222E; color: #7ED9A5; font-family: ui-monospace, "SF Mono", monospace;
+    font-size: 12.5px; resize: none; word-break: break-all;
+  }
+  .hint { font-size: 12px; color: #6E7684; margin-top: 16px; line-height: 1.5; }
+  .copy-btn { margin-top: 8px; background: #1C222E; color: #F2F0EA; border: 1px solid rgba(255,255,255,.1); font-size: 13px; padding: 9px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>Gerador de Código de Acesso</h1>
+    <p class="sub">Ferramenta interna — use apenas você, o vendedor. Gere um código para cada comprador, copie o HASH gerado e cole no arquivo <code>data/access-codes.js</code>. Envie o CÓDIGO (não o hash) para o comprador.</p>
+
+    <label for="inp-code">Código de acesso (invente um)</label>
+    <input type="text" id="inp-code" placeholder="Ex: IBAM-MARIA-7742" autocomplete="off" />
+    <button id="btn-generate">Gerar hash</button>
+
+    <div class="result" id="result">
+      <label>Código original (envie este para o comprador)</label>
+      <textarea id="out-code" rows="1" readonly></textarea>
+
+      <label>Hash (cole este no data/access-codes.js)</label>
+      <textarea id="out-hash" rows="3" readonly></textarea>
+      <button class="copy-btn" id="btn-copy">Copiar hash</button>
+    </div>
+
+    <p class="hint">
+      Dica: inclua algo identificável no código (nome ou data da venda) pra você lembrar depois quem é quem — o hash em si não é reversível, então anote em algum lugar seu (ex: uma nota no celular) qual código foi vendido pra qual pessoa.
+    </p>
+  </div>
+
+<script>
+async function sha256Hex(text) {
+  const enc = new TextEncoder().encode(text.trim());
+  const buf = await crypto.subtle.digest('SHA-256', enc);
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+document.getElementById('btn-generate').onclick = async () => {
+  const code = document.getElementById('inp-code').value.trim();
+  if (!code) { alert('Digite um código primeiro.'); return; }
+  if (!window.isSecureContext) {
+    alert('Este navegador não permite gerar o hash fora de um contexto seguro (https). Abra este arquivo através do link publicado no GitHub Pages, não direto do computador.');
+    return;
+  }
+  const hash = await sha256Hex(code);
+  document.getElementById('out-code').value = code;
+  document.getElementById('out-hash').value = `    "${hash}", // ${code.split('-')[0] || 'comprador'}`;
+  document.getElementById('result').classList.add('show');
+};
+
+document.getElementById('btn-copy').onclick = () => {
+  const el = document.getElementById('out-hash');
+  el.select();
+  document.execCommand('copy');
+};
+</script>
+</body>
+</html>

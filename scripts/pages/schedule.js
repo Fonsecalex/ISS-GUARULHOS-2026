@@ -36,6 +36,8 @@
           </div>`).join('')}
       </div>
 
+      <a href="#/history" class="chip chip--blue" style="display:inline-flex;margin-bottom:16px">${Icon('clock')} Ver histórico de estudos</a>
+
       <div class="section">
         <div class="card--flat card" style="display:flex;align-items:center;gap:14px">
           <div class="grow">
