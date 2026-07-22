@@ -37,5 +37,6 @@
     // Apague esta linha quando cadastrar seus próprios compradores.
     "3e72b88797cf8a088262639de978af91e6693558cfec85251e3387d47d6212a4",
     "b2857ff005ee57932139e2c901788ec22b4c532102c805567ac9718773a1d380", // Luci
+    "94d13773a3f535aef3cd224ce94c06439cbf7caa1db5f9d6346ab46c47f82b7f", // Teste
   ];
 })(window);
