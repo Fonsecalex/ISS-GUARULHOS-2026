@@ -1,0 +1,87 @@
+# .github/workflows/add-access-code.yml
+# -----------------------------------------------------------------------
+# Botão de auto-atendimento para adicionar um novo código de acesso ao
+# Auditor Pro IBAM — direto do celular, sem precisar editar nenhum arquivo.
+#
+# COMO USAR (pelo navegador do celular, no site github.com):
+#   1. Abra o repositório no GitHub.
+#   2. Toque na aba "Actions" (menu superior do repositório).
+#   3. Na lista à esquerda, toque em "Adicionar Código de Acesso".
+#   4. Toque no botão "Run workflow" (canto superior direito).
+#   5. Preencha o código (ex: IBAM-MARIA-01) e, se quiser, um rótulo
+#      pra você lembrar quem comprou.
+#   6. Toque no botão verde "Run workflow" para confirmar.
+#   7. Aguarde ~30-60 segundos — o site já estará atualizado sozinho.
+#   8. Envie o código digitado (não precisa de hash nem nada) para o
+#      comprador por WhatsApp.
+#
+# IMPORTANTE — configuração única necessária antes do primeiro uso:
+#   Vá em Settings → Actions → General → role até "Workflow permissions"
+#   → selecione "Read and write permissions" → Save.
+#   Sem isso, o workflow roda mas falha ao tentar salvar a alteração.
+# -----------------------------------------------------------------------
+
+name: Adicionar Código de Acesso
+
+on:
+  workflow_dispatch:
+    inputs:
+      codigo:
+        description: 'Código de acesso a liberar (ex: IBAM-MARIA-01)'
+        required: true
+        type: string
+      rotulo:
+        description: 'Rótulo pra você lembrar quem é (opcional)'
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  adicionar-codigo:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar o repositório
+        uses: actions/checkout@v4
+
+      - name: Gerar hash e inserir em data/access-codes.js
+        env:
+          CODIGO: ${{ inputs.codigo }}
+          ROTULO: ${{ inputs.rotulo }}
+        run: |
+          node -e '
+            const fs = require("fs");
+            const crypto = require("crypto");
+
+            const codigo = (process.env.CODIGO || "").trim();
+            if (!codigo) { console.error("Código vazio — nada foi feito."); process.exit(1); }
+
+            const rotulo = (process.env.ROTULO || "").trim() || codigo.split("-")[0] || "comprador";
+            const hash = crypto.createHash("sha256").update(codigo, "utf8").digest("hex");
+
+            const path = "data/access-codes.js";
+            let content = fs.readFileSync(path, "utf8");
+
+            if (content.includes(`"${hash}"`)) {
+              console.log("Esse código já está cadastrado. Nada foi alterado.");
+              process.exit(0);
+            }
+
+            const novaLinha = `\n    "${hash}", // ${rotulo}`;
+            content = content.replace(/(\s*)\];/, (m, espacos) => novaLinha + espacos + "];");
+            fs.writeFileSync(path, content);
+            console.log("Código adicionado para:", rotulo);
+          '
+
+      - name: Publicar alteração
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet; then
+            echo "Nada para publicar (código já existia)."
+          else
+            git add data/access-codes.js
+            git commit -m "Adiciona código de acesso: ${{ inputs.rotulo || inputs.codigo }}"
+            git push
+          fi

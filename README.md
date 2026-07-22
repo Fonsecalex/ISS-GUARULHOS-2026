@@ -39,19 +39,31 @@ Sem isso, o app funciona normalmente (todo o localStorage funciona via `file://`
 
 O app inclui um portão de acesso simples: sem um código válido, a pessoa só vê uma tela de bloqueio.
 
-**Como funciona:**
-1. Abra `gerador-de-codigo.html` publicado (ex: `https://seu-usuario.github.io/repo/gerador-de-codigo.html`) — só você deve usar esta página.
-2. Invente um código para o comprador (ex: `IBAM-MARIA-7742`) e clique em **Gerar hash**.
-3. Copie o hash gerado e cole como uma nova linha dentro de `data/access-codes.js`, na lista `ACCESS_HASHES`.
-4. Salve, faça commit e push (ou edite direto pelo site do GitHub, no arquivo `data/access-codes.js`).
-5. Envie o **código original** (não o hash) para o comprador via WhatsApp, depois de confirmar o Pix.
-6. A pessoa acessa o link do app, digita o código uma vez, e o navegador dela lembra — não precisa digitar de novo.
+### Forma recomendada — direto do celular, sem editar nada
 
-**Limitações importantes (por não haver servidor):**
+1. Abra o repositório em **github.com** pelo navegador do celular.
+2. Toque na aba **Actions** (menu superior).
+3. Na lista à esquerda, toque em **"Adicionar Código de Acesso"**.
+4. Toque no botão **"Run workflow"** (canto superior direito).
+5. Preencha:
+   - **codigo**: o código que você vai vender (ex: `IBAM-MARIA-01`)
+   - **rotulo** (opcional): algo pra você lembrar quem comprou (ex: `Maria - Pix 22/07`)
+6. Toque no botão verde **"Run workflow"** para confirmar.
+7. Aguarde cerca de 30-60 segundos — o site atualiza sozinho, sem você precisar fazer commit, push ou editar arquivo nenhum.
+8. Envie o **código digitado** (não precisa mexer com hash) para o comprador via WhatsApp.
+
+**Configuração única, antes do primeiro uso:** vá em **Settings → Actions → General**, role até **"Workflow permissions"**, selecione **"Read and write permissions"** e clique em **Save**. Sem isso, o botão roda mas falha ao tentar salvar a alteração (você verá um X vermelho na aba Actions se isso acontecer — normalmente é exatamente essa configuração faltando).
+
+### Forma manual (alternativa)
+
+Se preferir, o arquivo `gerador-de-codigo.html` (publicado junto com o site) continua funcionando: gera o hash de um código à sua escolha, que você cola manualmente em `data/access-codes.js` pelo editor do GitHub e publica com um commit.
+
+### Limitações importantes (por não haver servidor)
+
 - Qualquer pessoa com acesso ao código-fonte do site pode, em teoria, tentar contornar essa trava — ela impede uso casual, não é segurança de nível bancário.
 - Não é possível revogar remotamente o acesso de alguém que já desbloqueou o site no aparelho dela — apenas impedir *novos* desbloqueios com aquele código.
 - Se duas pessoas usarem o mesmo código, ambas conseguem desbloquear — não há limite de uso por código.
-- Para remover um comprador da lista (bloquear novos desbloqueios com o código dele), apague a linha correspondente em `data/access-codes.js` e publique a alteração.
+- Para remover um comprador da lista (bloquear novos desbloqueios com o código dele), apague a linha correspondente em `data/access-codes.js` pelo editor do GitHub e publique a alteração — isso ainda precisa ser feito manualmente, o workflow por enquanto só adiciona códigos.
 - Em **Configurações → Bloquear acesso neste aparelho** você pode re-testar a tela de bloqueio quando quiser, sem apagar seus dados de estudo.
 
 ## Cronômetro em segundo plano
@@ -68,6 +80,7 @@ O cronômetro foi reescrito para continuar contando corretamente mesmo quando vo
 
 ```
 index.html              Shell da aplicação
+.github/workflows/       add-access-code.yml — botão "Run workflow" que gera e publica um novo código de acesso
 manifest.json            Metadados PWA
 gerador-de-codigo.html   Ferramenta interna (só vendedor) para gerar códigos de acesso
 service-worker.js        Cache offline-first

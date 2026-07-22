@@ -7,16 +7,19 @@
  * puro — apenas o seu "hash" (uma impressão digital irreversível). Isso
  * evita que alguém que olhe o código-fonte do site veja os códigos válidos.
  *
- * COMO GERAR UM NOVO CÓDIGO PARA UM COMPRADOR:
- *   1. Abra o arquivo gerador-de-codigo.html (na raiz do projeto) em
- *      qualquer navegador — pode ser no celular ou no computador.
- *   2. Digite um código à sua escolha (ex: nome + números aleatórios).
- *   3. A página mostra o hash correspondente. Copie esse hash.
- *   4. Adicione uma nova linha na lista ACCESS_HASHES abaixo, no formato:
- *        "hash-copiado", // rótulo opcional pra você lembrar quem é
- *   5. Salve, faça commit e push para o GitHub (ou edite direto pelo
- *      site do GitHub, no arquivo data/access-codes.js).
- *   6. Envie o código ORIGINAL (não o hash) para o comprador por WhatsApp.
+ * COMO ADICIONAR UM NOVO CÓDIGO (forma recomendada — direto do celular):
+ *   Use a aba "Actions" do repositório no GitHub → workflow "Adicionar
+ *   Código de Acesso" → botão "Run workflow" → digite o código → Run.
+ *   Isso gera o hash, edita este arquivo e publica o site sozinho, em
+ *   menos de um minuto. Veja o passo a passo completo no README.md.
+ *
+ * FORMA MANUAL (alternativa, se preferir ou se o Actions não funcionar):
+ *   1. Abra o arquivo gerador-de-codigo.html (na raiz do projeto).
+ *   2. Digite um código à sua escolha e copie o hash gerado.
+ *   3. Adicione uma nova linha na lista ACCESS_HASHES abaixo, sempre
+ *      terminando com vírgula: "hash-copiado", // rótulo opcional
+ *   4. Salve, faça commit e push.
+ *   5. Envie o código ORIGINAL (não o hash) para o comprador por WhatsApp.
  *
  * Para revogar o acesso de alguém, apague a linha correspondente e
  * publique a alteração — o código deixa de funcionar para quem ainda
@@ -32,6 +35,6 @@
   global.ACCESS_HASHES = [
     // Exemplo incluso — código real: "TESTE-1234"
     // Apague esta linha quando cadastrar seus próprios compradores.
-    "3e72b88797cf8a088262639de978af91e6693558cfec85251e3387d47d6212a4"
+    "3e72b88797cf8a088262639de978af91e6693558cfec85251e3387d47d6212a4",
   ];
 })(window);
