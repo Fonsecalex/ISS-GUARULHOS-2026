@@ -12,6 +12,11 @@ button { font-family: inherit; background: none; border: none; color: inherit; c
 button:active { transform: scale(0.97); }
 input, textarea, select { font-family: inherit; color: inherit; background: transparent; border: none; outline: none; }
 a { color: inherit; text-decoration: none; }
+/* Tamanho padrão de segurança para ícones SVG: evita que um ícone "estoure" o
+   tamanho default do navegador (~300x150px) em qualquer contexto que esqueça
+   de definir um tamanho específico. Seletores mais específicos (ex: .icon-btn
+   svg, .chip svg) continuam podendo sobrescrever este valor normalmente. */
+svg { width: 20px; height: 20px; flex-shrink: 0; }
 ::selection { background: var(--gold); color: #14181F; }
 :focus-visible { outline: 2px solid var(--ledger-blue); outline-offset: 2px; border-radius: var(--r-sm); }
 

@@ -3,6 +3,7 @@
 .hero-card::after { content: ''; position: absolute; top: -40px; right: -40px; width: 160px; height: 160px; border-radius: 50%; background: radial-gradient(circle, rgba(201,162,39,0.35), transparent 70%); }
 .hero-card__top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--sp-5); }
 .hero-card__ring { position: relative; width: 64px; height: 64px; }
+.hero-card__ring svg { width: 64px; height: 64px; }
 .hero-card__streak { display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.12); padding: 6px 12px; border-radius: var(--r-pill); font-size: 12.5px; font-weight: 700; }
 .hero-card__streak svg { width: 14px; height: 14px; color: var(--gold); }
 .hero-card__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-3); margin-top: var(--sp-5); }
@@ -47,6 +48,7 @@
 .focus-screen__controls { display: flex; align-items: center; gap: var(--sp-5); margin-top: var(--sp-8); }
 .focus-screen__controls button.play { width: 68px; height: 68px; border-radius: 50%; background: var(--ink-0); color: var(--paper-0); display: flex; align-items: center; justify-content: center; }
 .focus-screen__controls button.play svg { width: 26px; height: 26px; }
+.focus-screen__controls button.secondary svg { width: 20px; height: 20px; }
 .focus-screen__controls button.secondary { width: 50px; height: 50px; border-radius: 50%; background: var(--paper-1); border: 1px solid var(--glass-border); display: flex; align-items: center; justify-content: center; }
 .focus-screen__progress { width: 100%; max-width: 300px; margin-top: var(--sp-7); }
 
@@ -59,6 +61,7 @@
 
 .level-card { text-align: center; padding: var(--sp-6) var(--sp-5); }
 .level-card__ring { width: 96px; height: 96px; margin: 0 auto var(--sp-4); position: relative; }
+.level-card__ring svg { width: 96px; height: 96px; }
 .badges-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--sp-2); }
 
 .search-overlay { position: fixed; inset: 0; z-index: 85; background: var(--paper-0); transform: translateY(100%); transition: transform var(--dur-3) var(--ease-spring); display: flex; flex-direction: column; }

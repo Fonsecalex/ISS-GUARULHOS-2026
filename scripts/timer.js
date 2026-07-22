@@ -69,7 +69,7 @@
       mode = newMode;
       phase = 'foco';
       pomodoroCount = 0;
-      phaseTargetSec = mode === 'pomodoro' ? POMODORO_FOCUS_SEC : (mode === 'contagem' ? phaseTargetSec : Infinity);
+      phaseTargetSec = mode === 'pomodoro' ? POMODORO_FOCUS_SEC : (mode === 'contagem' ? phaseTargetSecForCountdown : Infinity);
       studySecondsAccumulated = 0;
       accumulatedBeforePause = 0;
       phaseStartedAt = null;
@@ -199,7 +199,9 @@
         const s = JSON.parse(raw);
         mode = s.mode; phase = s.phase; pomodoroCount = s.pomodoroCount;
         disciplineId = s.disciplineId; temaId = s.temaId;
-        phaseTargetSec = s.phaseTargetSec; accumulatedBeforePause = s.accumulatedBeforePause;
+        // Infinity não sobrevive ao JSON.stringify/parse (vira null) — reconstrói pelo modo.
+        phaseTargetSec = mode === 'livre' ? Infinity : s.phaseTargetSec;
+        accumulatedBeforePause = s.accumulatedBeforePause;
         studySecondsAccumulated = s.studySecondsAccumulated; sessionStartedAt = s.sessionStartedAt;
         running = false; // sempre retoma pausado; o usuário decide continuar
         if (s.running && s.phaseStartedAt) {

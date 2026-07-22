@@ -125,7 +125,7 @@ main#page-outlet { padding: var(--sp-5) var(--sp-5) calc(var(--nav-h) + var(--sa
 @keyframes shimmer { 0% { background-position: 100% 0; } 100% { background-position: -100% 0; } }
 
 .timer-ring { position: relative; width: 240px; height: 240px; margin: 0 auto; }
-.timer-ring svg { transform: rotate(-90deg); }
+.timer-ring svg { width: 240px; height: 240px; transform: rotate(-90deg); }
 .timer-ring__bg { fill: none; stroke: var(--paper-2); stroke-width: 10; }
 .timer-ring__fg { fill: none; stroke: var(--gold); stroke-width: 10; stroke-linecap: round; transition: stroke-dashoffset 1s linear; }
 .timer-ring__label { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }

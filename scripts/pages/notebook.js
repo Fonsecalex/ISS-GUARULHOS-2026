@@ -166,30 +166,59 @@
     return `${U.fmtDateShort(iso)}, ${hora}`;
   }
 
-  async function togglePlay(clipId, btn) {
+  // Cache de URLs de áudio já carregadas do IndexedDB nesta sessão, para que o
+  // toque em "play" chame audioEl.play() o mais próximo possível do gesto do
+  // usuário — o Safari pode rejeitar silenciosamente a reprodução se ela for
+  // disparada depois de uma operação assíncrona (como ler do IndexedDB).
+  const audioUrlCache = new Map(); // clipId -> Object URL
+
+  async function prefetchAudioUrl(clipId) {
+    if (audioUrlCache.has(clipId)) return audioUrlCache.get(clipId);
+    try {
+      const blob = await global.NotebookDB.getClip(clipId);
+      if (!blob) return null;
+      const url = URL.createObjectURL(blob);
+      audioUrlCache.set(clipId, url);
+      return url;
+    } catch (e) { return null; }
+  }
+
+  function playFromUrl(clipId, url, btn) {
+    const audioEl = new Audio(url);
+    btn.innerHTML = Icon('pause');
+    activeAudio = { el: audioEl, btn, clipId };
+    const playPromise = audioEl.play();
+    if (playPromise && typeof playPromise.catch === 'function') {
+      playPromise.catch(err => {
+        console.error('Falha ao reproduzir áudio', err);
+        btn.innerHTML = Icon('play');
+        global.UI.toast('Não foi possível reproduzir. Toque novamente.', 'error');
+        activeAudio = null;
+      });
+    }
+    audioEl.onended = () => { btn.innerHTML = Icon('play'); activeAudio = null; };
+    audioEl.onpause = () => { if (activeAudio && activeAudio.clipId === clipId) { btn.innerHTML = Icon('play'); activeAudio = null; } };
+  }
+
+  function togglePlay(clipId, btn) {
     if (activeAudio && activeAudio.clipId === clipId) {
       activeAudio.el.pause();
       return;
     }
-    if (activeAudio) { activeAudio.el.pause(); }
-    const originalIcon = btn.innerHTML;
-    btn.style.opacity = '0.5';
-    try {
-      const blob = await global.NotebookDB.getClip(clipId);
-      if (!blob) { global.UI.toast('Áudio não encontrado neste aparelho', 'error'); btn.style.opacity = ''; return; }
-      const url = URL.createObjectURL(blob);
-      const audioEl = new Audio(url);
-      btn.style.opacity = '';
-      btn.innerHTML = Icon('pause');
-      activeAudio = { el: audioEl, btn, clipId };
-      audioEl.play();
-      audioEl.onended = () => { btn.innerHTML = Icon('play'); URL.revokeObjectURL(url); activeAudio = null; };
-      audioEl.onpause = () => { btn.innerHTML = Icon('play'); if (activeAudio && activeAudio.clipId === clipId) activeAudio = null; };
-    } catch (e) {
-      global.UI.toast('Não foi possível reproduzir o áudio', 'error');
-      btn.style.opacity = '';
-      btn.innerHTML = originalIcon;
+    if (activeAudio) activeAudio.el.pause();
+
+    const cachedUrl = audioUrlCache.get(clipId);
+    if (cachedUrl) {
+      playFromUrl(clipId, cachedUrl, btn); // toque -> play() quase imediato, preserva o gesto do usuário
+      return;
     }
+    // Raro: toque muito rápido antes do pré-carregamento terminar
+    btn.style.opacity = '0.5';
+    prefetchAudioUrl(clipId).then(url => {
+      btn.style.opacity = '';
+      if (!url) { global.UI.toast('Áudio não encontrado neste aparelho', 'error'); return; }
+      playFromUrl(clipId, url, btn);
+    });
   }
 
   function renderNoteRow(note) {
@@ -222,7 +251,11 @@
       message: note.audioClipId ? 'O áudio gravado também será apagado deste aparelho.' : 'Esta ação não pode ser desfeita.',
       confirmLabel: 'Excluir', danger: true,
       onConfirm: async () => {
-        if (note.audioClipId) { try { await global.NotebookDB.deleteClip(note.audioClipId); } catch (e) {} }
+        if (note.audioClipId) {
+          try { await global.NotebookDB.deleteClip(note.audioClipId); } catch (e) {}
+          const cachedUrl = audioUrlCache.get(note.audioClipId);
+          if (cachedUrl) { URL.revokeObjectURL(cachedUrl); audioUrlCache.delete(note.audioClipId); }
+        }
         global.State.deleteNote(note.id);
         global.UI.toast('Nota excluída', 'success');
         global.Router.render();
@@ -249,6 +282,7 @@
       return;
     }
     notes.forEach(n => list.appendChild(renderNoteRow(n)));
+    notes.forEach(n => { if (n.audioClipId) prefetchAudioUrl(n.audioClipId); });
   }
 
   /** Sheet rápido de anotação, acionado a partir do Modo Foco — já vinculado ao tema em estudo */

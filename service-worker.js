@@ -4,7 +4,7 @@
  * garantindo funcionamento 100% offline após o primeiro carregamento.
  * Nenhuma chamada de rede é feita a servidores próprios — tudo estático.
  */
-const CACHE_NAME = 'auditor-pro-ibam-v3';
+const CACHE_NAME = 'auditor-pro-ibam-v4';
 const APP_SHELL = [
   './',
   './index.html',
