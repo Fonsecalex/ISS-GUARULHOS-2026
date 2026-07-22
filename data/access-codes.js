@@ -36,5 +36,6 @@
     // Exemplo incluso — código real: "TESTE-1234"
     // Apague esta linha quando cadastrar seus próprios compradores.
     "3e72b88797cf8a088262639de978af91e6693558cfec85251e3387d47d6212a4",
+    "b2857ff005ee57932139e2c901788ec22b4c532102c805567ac9718773a1d380", // Luci
   ];
 })(window);
